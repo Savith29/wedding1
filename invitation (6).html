@@ -1,0 +1,824 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Our Forever</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300;1,400&family=Jost:wght@300;400;500&display=swap">
+<style>
+/* Layout: centred, section-by-section invitation. A dark-green welcome and voice band frame cream content bands.
+   Accent is sage on dark and a deeper moss on cream. */
+:root {
+  --forest: #04190d;
+  --forest-deep: #02110a;
+  --moss: #2f4a38;
+  --sage: #9bb39a;
+  --cream: #edece5;
+  --ink: #0b1a11;
+  --champagne: #d9c8a4;
+  --l-bg: #e8e7dc;
+  --l-bg2: #f3f2ea;
+  --l-card: #fbfaf5;
+  --l-fg: #0b1a11;
+  --l-muted: #4c6254;
+  --l-line: rgba(11, 26, 17, 0.16);
+  --l-accent: #4f7358;
+  --display: "Cormorant Garamond", "Cormorant", Georgia, "Times New Roman", serif;
+  --body: "Jost", "Segoe UI", system-ui, -apple-system, sans-serif;
+  color-scheme: light;
+}
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; text-size-adjust: 100%; }
+body {
+  margin: 0;
+  background: var(--l-bg);
+  color: var(--l-fg);
+  font-family: var(--body);
+  font-weight: 300;
+  font-size: 1.02rem;
+  line-height: 1.7;
+  -webkit-font-smoothing: antialiased;
+}
+button, input, textarea { font: inherit; color: inherit; }
+button { cursor: pointer; }
+:focus-visible { outline: 2px solid var(--accent, var(--sage)); outline-offset: 3px; }
+
+.band { padding-block: clamp(3.5rem, 9vw, 6.5rem); padding-inline: 1.25rem; text-align: center; }
+.wrap { max-width: 56rem; margin-inline: auto; }
+.lb { --fg: var(--l-fg); --muted: var(--l-muted); --line: var(--l-line); --accent: var(--l-accent); --card: var(--l-card); background: var(--l-bg); color: var(--fg); }
+.lb.alt { background: var(--l-bg2); }
+.dk { --fg: var(--cream); --muted: var(--sage); --line: rgba(237, 236, 229, 0.24); --accent: var(--sage); --card: #0b2a17; background: var(--forest); color: var(--fg); }
+
+/* Section heading */
+.sh { display: grid; gap: 1rem; justify-items: center; margin-bottom: clamp(2rem, 6vw, 3.5rem); }
+.sh h2 { font-family: var(--display); font-weight: 400; font-size: clamp(2.2rem, 7vw, 3.5rem); line-height: 1.1; margin: 0; text-wrap: balance; }
+.sh h2 em { font-style: italic; color: var(--accent); }
+.orn { display: flex; align-items: center; gap: 0.9rem; color: var(--accent); }
+.orn i { display: block; width: 1.6rem; height: 2px; background: currentColor; opacity: 0.8; }
+.orn svg { width: 1rem; height: 1rem; fill: currentColor; }
+.eyebrow { font-size: 0.72rem; letter-spacing: 0.3em; text-transform: uppercase; font-weight: 400; color: var(--muted); margin: 0; }
+
+.btn {
+  display: inline-flex; align-items: center; justify-content: center; gap: 0.6rem;
+  min-height: 3rem; padding: 0.7rem 1.5rem; border: 1px solid var(--accent); border-radius: 3px;
+  background: transparent; color: var(--accent); font-size: 0.78rem; letter-spacing: 0.16em; text-transform: uppercase;
+  font-weight: 500; text-decoration: none; transition: background 0.25s, color 0.25s;
+}
+.btn:hover { background: var(--accent); color: var(--card); }
+.btn.solid { background: var(--moss); border-color: var(--moss); color: var(--cream); }
+.btn.solid:hover { background: var(--forest); border-color: var(--forest); }
+.btn svg { width: 1.05rem; height: 1.05rem; flex: none; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+.btn[aria-disabled="true"] { opacity: 0.55; }
+
+/* ---------- Floating dock ---------- */
+.dock { position: fixed; bottom: calc(env(safe-area-inset-bottom, 0px) + 0.8rem); right: 0.8rem; z-index: 70; display: grid; gap: 0.6rem; }
+.dock button {
+  width: 2.8rem; height: 2.8rem; border-radius: 50%; border: 1px solid rgba(237, 236, 229, 0.25);
+  background: rgba(4, 25, 13, 0.82); color: var(--cream); backdrop-filter: blur(6px);
+  display: grid; place-items: center; font-size: 0.78rem; letter-spacing: 0.06em; font-weight: 500;
+}
+.dock svg { width: 1.15rem; height: 1.15rem; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+#musicBtn[aria-pressed="false"] .n { display: none; }
+#musicBtn[aria-pressed="true"] .m { display: none; }
+.music-ctl { display: flex; align-items: center; gap: 0.2rem; padding: 0.15rem 0.9rem 0.15rem 0.15rem; border-radius: 999px; border: 1px solid rgba(237, 236, 229, 0.25); background: rgba(4, 25, 13, 0.82); backdrop-filter: blur(6px); color: var(--cream); }
+.dock .music-ctl button { width: 2.5rem; height: 2.5rem; border: 0; background: transparent; backdrop-filter: none; flex: none; }
+.dock .music-ctl button:hover { background: rgba(237, 236, 229, 0.1); }
+.music-ctl input[type="range"] { -webkit-appearance: none; appearance: none; width: 5.5rem; height: 1.8rem; margin: 0; background: transparent; cursor: pointer; --p: 60%; }
+.music-ctl input[type="range"]::-webkit-slider-runnable-track { height: 3px; border-radius: 2px; background: linear-gradient(to right, var(--sage) var(--p), rgba(237, 236, 229, 0.28) var(--p)); }
+.music-ctl input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; width: 14px; height: 14px; margin-top: -5.5px; border-radius: 50%; background: var(--cream); border: 0; }
+.music-ctl input[type="range"]::-moz-range-track { height: 3px; border-radius: 2px; background: rgba(237, 236, 229, 0.28); }
+.music-ctl input[type="range"]::-moz-range-progress { height: 3px; border-radius: 2px; background: var(--sage); }
+.music-ctl input[type="range"]::-moz-range-thumb { width: 14px; height: 14px; border-radius: 50%; background: var(--cream); border: 0; }
+
+/* ---------- Welcome ---------- */
+.welcome {
+  position: fixed; inset: 0; z-index: 60; overflow-y: auto; display: flex; padding: 1.25rem;
+  background: radial-gradient(120% 90% at 50% 0%, #0b3820 0%, var(--forest) 55%, var(--forest-deep) 100%); color: var(--cream);
+  transition: transform 0.9s cubic-bezier(.7, 0, .2, 1), opacity 0.9s;
+}
+.welcome::after { content: ""; position: fixed; inset: 0; background: linear-gradient(180deg, rgba(2, 17, 10, 0.45), rgba(2, 17, 10, 0.72)); pointer-events: none; }
+.welcome.gone { transform: translateY(-100%); opacity: 0; pointer-events: none; }
+.welcome-video { position: fixed; inset: 0; z-index: -1; width: 100%; height: 100%; object-fit: cover; background: #000; }
+.welcome-in { position: relative; z-index: 1; margin: auto; width: 100%; max-width: 42rem; display: grid; gap: 1.2rem; justify-items: center; text-align: center; padding-block: 1.5rem; }
+.welcome .eyebrow { color: var(--sage); animation: rise 1s 0.2s ease both; }
+.welcome h1 { font-family: var(--display); font-style: italic; font-weight: 300; font-size: clamp(2.6rem, 10vw, 4.6rem); line-height: 1.08; margin: 0; overflow-wrap: anywhere; animation: rise 1s 0.4s ease both; }
+.welcome h1 em { color: var(--sage); }
+.w-sub { margin: 0; max-width: 28rem; color: #d0ddce; animation: rise 1s 0.6s ease both; }
+@keyframes rise { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+.welcome .btn { color: var(--cream); border-color: var(--sage); border-radius: 999px; background: rgba(237, 236, 229, 0.06); min-height: 3.4rem; padding-inline: 2.2rem; animation: rise 1s 0.2s ease both; }
+.welcome .btn:hover { background: var(--cream); color: var(--forest); }
+
+/* ---------- Invitation card ---------- */
+.card2 { position: relative; max-width: 40rem; margin-inline: auto; background: var(--card); padding: clamp(2.2rem, 7vw, 3.6rem) clamp(1.2rem, 6vw, 3rem); box-shadow: 0 24px 60px rgba(4, 25, 13, 0.18); border-radius: 3px; }
+.card2::before, .card2::after { content: ""; position: absolute; width: 5rem; height: 5rem; border: 1px solid var(--accent); opacity: 0.75; pointer-events: none; }
+.card2::before { top: 0.9rem; left: 0.9rem; border-right: 0; border-bottom: 0; }
+.card2::after { bottom: 0.9rem; right: 0.9rem; border-left: 0; border-top: 0; }
+.card2 .kicker { font-family: var(--display); font-style: italic; letter-spacing: 0.34em; text-transform: uppercase; color: var(--accent); font-size: 0.95rem; margin: 0 0 0.8rem; }
+.card2 .orn { justify-content: center; margin-bottom: 1.4rem; }
+.names { font-family: var(--display); font-weight: 300; font-size: clamp(2.3rem, 8.5vw, 3.8rem); line-height: 1.1; margin: 0 0 1.4rem; text-wrap: balance; overflow-wrap: anywhere; }
+.names em { color: var(--accent); font-style: italic; padding-inline: 0.15em; }
+.card2 .rule { width: 4.5rem; height: 1px; background: var(--accent); margin: 0 auto 1.8rem; }
+.invite-line { margin: 0 auto 1.8rem; max-width: 26rem; color: var(--muted); }
+.info { display: grid; gap: 1.2rem; justify-items: center; margin-bottom: 2rem; }
+.info-row { display: flex; align-items: center; gap: 1rem; text-align: left; max-width: 100%; }
+.info-ico { flex: none; width: 2.6rem; height: 2.6rem; border-radius: 50%; border: 1px solid var(--accent); display: grid; place-items: center; color: var(--accent); }
+.info-ico svg { width: 1.1rem; height: 1.1rem; fill: none; stroke: currentColor; stroke-width: 1.5; stroke-linecap: round; stroke-linejoin: round; }
+.info-row .k { display: block; font-size: 0.68rem; letter-spacing: 0.26em; text-transform: uppercase; color: var(--muted); }
+.info-row .v { display: block; font-size: 1.1rem; color: var(--fg); overflow-wrap: anywhere; }
+.info-row .v .soon { opacity: 0.65; font-style: italic; }
+.actions { display: flex; flex-wrap: wrap; gap: 0.7rem; justify-content: center; }
+
+/* ---------- Couple photo (full width) ---------- */
+.photo-band { padding: 0; background: var(--forest); }
+.photo-band .wrap { max-width: none; }
+.couple-photo { position: relative; margin: 0; width: 100%; }
+.couple-photo img { display: block; width: 100%; height: clamp(19rem, 56vw, 40rem); object-fit: cover; object-position: center 55%; background: var(--forest); }
+.couple-photo::after { content: ""; position: absolute; inset: 0; pointer-events: none; background: linear-gradient(180deg, rgba(4, 25, 13, 0.35) 0%, rgba(4, 25, 13, 0) 22%, rgba(4, 25, 13, 0) 70%, rgba(4, 25, 13, 0.45) 100%); }
+
+/* ---------- Countdown ---------- */
+.count { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: clamp(0.5rem, 2vw, 1rem); max-width: 34rem; margin-inline: auto; }
+.count div { background: var(--card); border: 1px solid var(--line); border-radius: 3px; padding: clamp(1rem, 4vw, 1.8rem) 0.2rem clamp(0.8rem, 3vw, 1.2rem); box-shadow: 0 10px 24px rgba(4, 25, 13, 0.08); }
+.count b { display: block; font-family: var(--display); font-weight: 500; font-size: clamp(2rem, 9vw, 3.2rem); line-height: 1; color: var(--accent); font-variant-numeric: tabular-nums; }
+.count span { font-size: 0.64rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--muted); }
+.count-note { margin: 1.4rem 0 0; color: var(--muted); font-size: 0.9rem; }
+
+/* ---------- Story ---------- */
+.story-text { font-family: var(--display); font-size: clamp(1.5rem, 3.8vw, 2.2rem); line-height: 1.4; margin: 0 auto; max-width: 40rem; text-wrap: pretty; }
+.story-text em { font-style: italic; color: var(--accent); }
+
+/* ---------- Programme ---------- */
+.tl { list-style: none; margin: 0 auto; padding: 0; max-width: 40rem; position: relative; display: grid; gap: 1.1rem; text-align: left; }
+.tl::before { content: ""; position: absolute; left: 0.45rem; top: 1rem; bottom: 1rem; width: 1px; background: var(--line); }
+.tl li { position: relative; padding-left: 2.4rem; }
+.tl li::before { content: ""; position: absolute; left: 0; top: 1.5rem; width: 0.95rem; height: 0.95rem; border-radius: 50%; border: 2px solid var(--accent); background: var(--l-bg2); transition: all 0.4s; }
+.tl .box { background: var(--card); border-left: 3px solid var(--accent); border-radius: 3px; padding: 1.1rem 1.4rem; box-shadow: 0 8px 22px rgba(4, 25, 13, 0.07); transition: opacity 0.4s, transform 0.4s; }
+.tl .t { font-size: 0.78rem; letter-spacing: 0.2em; font-weight: 500; color: var(--accent); font-variant-numeric: tabular-nums; }
+.tl .e { font-family: var(--display); font-size: 1.55rem; line-height: 1.25; margin: 0.1rem 0 0; }
+.tl .d { font-size: 0.88rem; color: var(--muted); }
+.tl .tag { display: none; width: max-content; margin-top: 0.5rem; padding: 0.15rem 0.8rem; border-radius: 999px; font-size: 0.64rem; letter-spacing: 0.2em; text-transform: uppercase; background: var(--moss); color: var(--cream); }
+.tl li.done .box { opacity: 0.5; }
+.tl li.done::before { background: var(--accent); }
+.tl li.now::before, .tl li.next::before { background: var(--accent); box-shadow: 0 0 0 6px rgba(79, 115, 88, 0.2); }
+.tl li.now .box, .tl li.next .box { transform: translateX(4px); }
+.tl li.now .tag, .tl li.next .tag { display: block; }
+.tl li.now::before { animation: pulse 1.8s ease-in-out infinite; }
+@keyframes pulse { 50% { box-shadow: 0 0 0 11px rgba(79, 115, 88, 0.06); } }
+.tl-note { margin: 1.6rem 0 0; font-size: 0.85rem; color: var(--muted); }
+.post { max-width: 40rem; margin: 2.5rem auto 0; padding: 1.6rem; border: 1px solid var(--line); border-radius: 3px; background: var(--card); }
+.post h3 { font-family: var(--display); font-weight: 400; font-size: 1.7rem; margin: 0.4rem 0 0.4rem; }
+.post p { margin: 0; color: var(--muted); }
+
+/* ---------- Gallery ---------- */
+.gal { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: clamp(0.5rem, 1.6vw, 1rem); max-width: 52rem; margin-inline: auto; }
+.shot { margin: 0; display: grid; gap: 0.5rem; min-width: 0; }
+.pic { aspect-ratio: 1; border-radius: 4px; overflow: hidden; border: 1px solid var(--line); background: rgba(237, 236, 229, 0.05); }
+.pic img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.pic.empty { display: grid; place-content: center; justify-items: center; gap: 0.5rem; color: var(--sage); opacity: 0.8; font-size: 0.78rem; }
+.pic.empty svg { width: 1.8rem; height: 1.8rem; fill: none; stroke: currentColor; stroke-width: 1.4; stroke-linecap: round; stroke-linejoin: round; }
+.shot .acts { display: flex; gap: 0.4rem; justify-content: center; }
+.ico { display: inline-flex; align-items: center; gap: 0.35rem; min-height: 2.2rem; padding: 0.2rem 0.7rem; border: 1px solid var(--line); border-radius: 999px; background: transparent; color: var(--fg); font-size: 0.74rem; }
+.ico svg { width: 1rem; height: 1rem; fill: none; stroke: currentColor; stroke-width: 1.6; }
+.ico[aria-pressed="true"] { background: var(--sage); color: var(--forest); border-color: var(--sage); }
+.ico[aria-pressed="true"] svg { fill: currentColor; }
+.gal-note { margin: 1.6rem 0 0; font-size: 0.85rem; color: var(--muted); }
+
+/* ---------- Dress code ---------- */
+.dress-card { max-width: 36rem; margin-inline: auto; background: var(--card); border: 1px solid var(--line); border-radius: 3px; padding: clamp(1.8rem, 6vw, 2.8rem); box-shadow: 0 16px 40px rgba(4, 25, 13, 0.08); }
+.dress-card .eyebrow { margin-bottom: 1.4rem; }
+.swatches { display: flex; flex-wrap: wrap; justify-content: center; gap: 1.1rem; margin-bottom: 1.6rem; }
+.sw { display: grid; gap: 0.5rem; justify-items: center; }
+.sw i { display: block; width: 3.4rem; height: 3.4rem; border-radius: 50%; border: 1px solid var(--line); box-shadow: 0 6px 14px rgba(4, 25, 13, 0.14); }
+.sw span { font-size: 0.78rem; color: var(--muted); }
+.dress-card hr { border: 0; height: 1px; width: 4.5rem; background: var(--accent); margin: 0 auto 1.4rem; }
+.dress-card p { margin: 0 0 0.8rem; font-family: var(--display); font-style: italic; font-size: 1.3rem; line-height: 1.45; color: var(--muted); }
+.dress-card .who { font-family: var(--body); font-style: normal; font-size: 0.95rem; }
+
+/* ---------- RSVP ---------- */
+.rsvp-card { max-width: 36rem; margin-inline: auto; background: var(--l-card); color: var(--l-fg); border-radius: 3px; padding: clamp(1.4rem, 5vw, 2.4rem); display: grid; gap: 1.4rem; text-align: left; --fg: var(--l-fg); --accent: var(--l-accent); --muted: var(--l-muted); --line: var(--l-line); }
+.field { display: grid; gap: 0.4rem; min-width: 0; }
+.field > label, .lbl { font-size: 0.68rem; letter-spacing: 0.24em; text-transform: uppercase; color: var(--muted); font-weight: 400; padding: 0; }
+.field input[type="text"], .field textarea { width: 100%; background: transparent; border: 0; border-bottom: 1px solid var(--line); padding: 0.55rem 0; font-size: 1.05rem; border-radius: 0; color: var(--fg); }
+.field textarea { resize: vertical; min-height: 5rem; border: 1px solid var(--line); padding: 0.7rem; border-radius: 3px; }
+.field input:focus, .field textarea:focus { outline: none; border-color: var(--accent); }
+fieldset { border: 0; padding: 0; margin: 0; min-width: 0; }
+.seg { display: grid; grid-template-columns: 1fr 1fr; border: 1px solid var(--accent); border-radius: 3px; overflow: hidden; }
+.seg > div { position: relative; }
+.seg > div + div { border-left: 1px solid var(--accent); }
+.seg input { position: absolute; opacity: 0; pointer-events: none; }
+.seg label { display: block; text-align: center; padding: 0.85rem 0.5rem; font-size: 0.85rem; cursor: pointer; transition: background 0.2s, color 0.2s; }
+.seg input:checked + label { background: var(--moss); color: var(--cream); }
+.seg input:focus-visible + label { outline: 2px solid var(--accent); outline-offset: -4px; }
+.pair { display: grid; grid-template-columns: 1fr 1fr; gap: 1.2rem; }
+.step { display: flex; align-items: center; justify-content: space-between; border-bottom: 1px solid var(--line); padding-block: 0.3rem; }
+.step button { width: 2.5rem; height: 2.5rem; border-radius: 50%; border: 1px solid var(--accent); background: transparent; font-size: 1.3rem; line-height: 1; color: var(--accent); }
+.step button:hover { background: var(--accent); color: var(--l-card); }
+.step output { font-family: var(--display); font-size: 1.9rem; font-variant-numeric: tabular-nums; }
+.err { color: #a63a28; font-size: 0.88rem; margin: 0; min-height: 1.2em; }
+.replied { margin: 0; font-size: 0.88rem; padding: 0.6rem 0.9rem; border: 1px solid var(--line); border-radius: 3px; background: rgba(79, 115, 88, 0.1); }
+
+.modal { position: fixed; inset: 0; z-index: 90; display: grid; place-items: center; padding: 1.25rem; background: rgba(2, 17, 10, 0.82); backdrop-filter: blur(4px); overflow-y: auto; }
+.modal-card { background: #fbfaf5; color: var(--ink); width: min(100%, 26rem); padding: 2.4rem 1.6rem 1.8rem; text-align: center; display: grid; gap: 1rem; justify-items: center; border-radius: 3px; animation: rise 0.6s ease both; --accent: #4f7358; --muted: #4c6254; }
+.modal-card h3 { font-family: var(--display); font-weight: 400; font-size: 2.2rem; margin: 0; }
+.modal-card p { margin: 0; }
+.modal-card .heart { width: 3.4rem; height: 3.4rem; fill: var(--moss); animation: beat 1.4s ease-in-out infinite; }
+@keyframes beat { 0%, 100% { transform: scale(1); } 20% { transform: scale(1.18); } 40% { transform: scale(1); } }
+.msgbox { width: 100%; text-align: left; font-size: 0.82rem; border: 1px dashed rgba(11, 26, 17, 0.3); padding: 0.7rem; white-space: pre-wrap; overflow-wrap: anywhere; }
+.modal-card .btn { width: 100%; }
+
+/* ---------- Guest book ---------- */
+.gb { display: grid; grid-template-columns: 1fr 1fr; gap: clamp(1.5rem, 5vw, 3rem); align-items: start; text-align: left; max-width: 52rem; margin-inline: auto; }
+.gb form { display: grid; gap: 1.1rem; }
+.chips { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+.chip { border: 1px solid var(--line); border-radius: 999px; background: transparent; padding: 0.3rem 0.9rem; font-size: 0.8rem; color: var(--fg); }
+.chip:hover { background: var(--accent); color: var(--card); }
+.wishes { list-style: none; margin: 0; padding: 0; display: grid; gap: 1rem; }
+.wishes li { background: var(--card); border: 1px solid var(--line); border-radius: 3px; padding: 1rem 1.2rem; animation: rise 0.6s ease both; }
+.wishes q { display: block; font-family: var(--display); font-size: 1.4rem; line-height: 1.3; quotes: none; overflow-wrap: anywhere; }
+.wishes cite { display: block; margin-top: 0.4rem; font-style: normal; font-size: 0.72rem; letter-spacing: 0.2em; text-transform: uppercase; color: var(--accent); }
+.wishes .empty { background: transparent; border-style: dashed; font-style: italic; color: var(--muted); }
+.small-note { font-size: 0.82rem; color: var(--muted); margin: 0; }
+.gb h3 { font-weight: 400; margin: 0 0 1rem; }
+
+/* ---------- Closing ---------- */
+.closing { background: linear-gradient(160deg, #04190d, #0b3820); }
+.closing .wrap { max-width: 38rem; }
+.closing h2 { font-family: var(--display); font-weight: 400; font-size: clamp(2.2rem, 6.5vw, 3.6rem); line-height: 1.1; margin: 0 0 1.8rem; text-wrap: balance; }
+.closing p { margin: 0 0 1.2rem; color: #c3d4c1; }
+.closing .thanks { font-family: var(--display); font-style: italic; font-size: clamp(1.5rem, 3.6vw, 2rem); margin-top: 2rem; color: var(--champagne); }
+footer { background: var(--forest-deep); color: var(--sage); padding: 1.8rem 1.25rem; text-align: center; font-size: 0.72rem; letter-spacing: 0.22em; text-transform: uppercase; }
+
+.toast { position: fixed; left: 50%; bottom: calc(env(safe-area-inset-bottom, 0px) + 4.6rem); transform: translate(-50%, 1rem); opacity: 0; visibility: hidden; pointer-events: none; z-index: 95; background: var(--cream); color: var(--ink); padding: 0.7rem 1.3rem; border-radius: 999px; font-size: 0.88rem; max-width: calc(100% - 2rem); transition: transform 0.4s, opacity 0.4s, visibility 0.4s; box-shadow: 0 10px 30px rgba(0, 0, 0, 0.4); text-align: center; }
+.toast.show { transform: translate(-50%, 0); opacity: 1; visibility: visible; }
+
+@media (max-width: 640px) {
+  .gb { grid-template-columns: 1fr; }
+  .gal { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .info-row { text-align: left; }
+  .actions .btn { width: 100%; }
+  .dock { gap: 0.45rem; }
+  .dock button { width: 2.5rem; height: 2.5rem; }
+}
+@media (prefers-reduced-motion: reduce) {
+  html { scroll-behavior: auto; }
+  *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; transition-duration: 0.01ms !important; }
+}
+</style>
+</head>
+<body>
+<svg width="0" height="0" style="position:absolute" aria-hidden="true">
+  <symbol id="star" viewBox="0 0 24 24"><path d="M12 1l2.2 8.8L23 12l-8.8 2.2L12 23l-2.2-8.8L1 12l8.8-2.2z"/></symbol>
+</svg>
+
+<!-- ============ 1. WELCOME ============ -->
+<section class="welcome" id="welcome" aria-label="Welcome">
+  <img class="welcome-video" id="welcomeBg" alt="" aria-hidden="true" referrerpolicy="no-referrer">
+  <div class="welcome-in">
+    <p class="eyebrow" data-i18n="invited"></p>
+    <h1 id="wTitle"></h1>
+    <p class="w-sub" data-i18n="welcomeSub"></p>
+    <button class="btn" id="openBtn" type="button" data-i18n="open"></button>
+  </div>
+</section>
+
+<div class="dock" role="toolbar" aria-label="Music controls">
+  <div class="music-ctl">
+    <button id="musicBtn" type="button" aria-label="Turn music on" aria-pressed="false">
+      <svg class="m" viewBox="0 0 24 24"><path d="M4 10v4h4l5 4V6L8 10H4z"/><path d="M17 9.500l5 5M22 9.500l-5 5"/></svg>
+      <svg class="n" viewBox="0 0 24 24"><path d="M4 10v4h4l5 4V6L8 10H4z"/><path d="M16.500 8.500a5 5 0 0 1 0 7M19 6a8.500 8.500 0 0 1 0 12"/></svg>
+    </button>
+    <input id="musicVol" type="range" min="0" max="100" step="1" value="60" aria-label="Music volume">
+  </div>
+</div>
+
+<audio id="backgroundMusic" src="https://raw.githubusercontent.com/Savith29/Demo1/main/WhatsApp%20Audio%202026-10-11%20at%2010.10.30.mpeg" loop preload="none"></audio>
+
+<main id="page">
+
+  <!-- ============ 2. INVITATION CARD ============ -->
+  <section class="band lb" id="invite">
+    <div class="wrap">
+      <article class="card2">
+        <p class="kicker" data-i18n="weddingInv"></p>
+        <div class="orn"><i></i><svg><use href="#star"/></svg><i></i></div>
+        <h2 class="names" id="cardNames"></h2>
+        <div class="rule"></div>
+        <p class="invite-line" data-i18n="inviteLine"></p>
+        <div class="info">
+          <div class="info-row">
+            <span class="info-ico"><svg viewBox="0 0 24 24"><rect x="4" y="5" width="16" height="15" rx="1.500"/><path d="M4 10h16M9 3v4M15 3v4"/></svg></span>
+            <span><span class="k" data-i18n="dateTime"></span><span class="v" id="cardDate"></span></span>
+          </div>
+          <div class="info-row">
+            <span class="info-ico"><svg viewBox="0 0 24 24"><path d="M12 22s7-6.200 7-12a7 7 0 1 0-14 0c0 5.800 7 12 7 12z"/><circle cx="12" cy="10" r="2.500"/></svg></span>
+            <span><span class="k" data-i18n="venue"></span><span class="v" data-i18n="venueName"></span></span>
+          </div>
+        </div>
+        <div class="actions">
+          <a class="btn solid" id="mapBtn" href="https://www.google.com/maps/dir/?api=1&destination=St.+Francis+of+Assisi+Church+Mount+Lavinia" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24"><path d="M12 22s7-6.200 7-12a7 7 0 1 0-14 0c0 5.800 7 12 7 12z"/><circle cx="12" cy="10" r="2.500"/></svg><span data-i18n="maps"></span>
+          </a>
+          <a class="btn" id="calBtn" href="#" target="_blank" rel="noopener">
+            <svg viewBox="0 0 24 24"><rect x="4" y="5" width="16" height="15" rx="1.500"/><path d="M4 10h16M9 3v4M15 3v4"/></svg><span data-i18n="calendar"></span>
+          </a>
+        </div>
+      </article>
+    </div>
+  </section>
+
+  <!-- ============ 3. COUPLE PHOTO ============ -->
+  <section class="band dk photo-band" id="couple">
+    <div class="wrap">
+      <figure class="couple-photo">
+        <img id="couplePhoto" alt="Umesh and Nawodhya" referrerpolicy="no-referrer">
+      </figure>
+    </div>
+  </section>
+
+  <!-- ============ Countdown ============ -->
+  <section class="band lb alt" id="countdown">
+    <div class="wrap">
+      <header class="sh"><h2 data-i18n="countH"></h2><div class="orn"><i></i><svg><use href="#star"/></svg><i></i></div></header>
+      <div class="count">
+        <div><b data-u="d">00</b><span data-i18n="days"></span></div>
+        <div><b data-u="h">00</b><span data-i18n="hours"></span></div>
+        <div><b data-u="m">00</b><span data-i18n="mins"></span></div>
+        <div><b data-u="s">00</b><span data-i18n="secs"></span></div>
+      </div>
+      <p class="count-note" id="countNote"></p>
+    </div>
+  </section>
+
+  <!-- ============ Story ============ -->
+  <section class="band lb" id="story">
+    <div class="wrap">
+      <header class="sh"><h2 data-i18n="storyH"></h2><div class="orn"><i></i><svg><use href="#star"/></svg><i></i></div></header>
+      <p class="story-text" data-i18n="storyText"></p>
+    </div>
+  </section>
+
+  <!-- ============ 4. PROGRAMME ============ -->
+  <section class="band lb alt" id="agenda">
+    <div class="wrap">
+      <header class="sh"><h2 data-i18n="progH"></h2><div class="orn"><i></i><svg><use href="#star"/></svg><i></i></div></header>
+      <ol class="tl" id="tl"></ol>
+      <p class="tl-note" id="tlNote"></p>
+      <div class="post">
+        <p class="eyebrow" data-i18n="postK"></p>
+        <h3 data-i18n="postH"></h3>
+        <p data-i18n="postT"></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 5. MEMORY LANE ============ -->
+  <section class="band dk" id="memory">
+    <div class="wrap">
+      <header class="sh"><h2 data-i18n="memH"></h2><div class="orn"><i></i><svg><use href="#star"/></svg><i></i></div></header>
+      <div class="gal" id="gal"></div>
+      <p class="gal-note" id="galNote"></p>
+    </div>
+  </section>
+
+  <!-- ============ Dress code ============ -->
+  <section class="band lb" id="dress">
+    <div class="wrap">
+      <header class="sh"><h2 data-i18n="dressH"></h2><div class="orn"><i></i><svg><use href="#star"/></svg><i></i></div></header>
+      <div class="dress-card">
+        <p class="eyebrow" data-i18n="themeCol"></p>
+        <div class="swatches" role="list">
+          <div class="sw" role="listitem"><i style="background:#04190d"></i><span data-i18n="cForest"></span></div>
+          <div class="sw" role="listitem"><i style="background:#2f4a38"></i><span data-i18n="cMoss"></span></div>
+          <div class="sw" role="listitem"><i style="background:#9bb39a"></i><span data-i18n="cSage"></span></div>
+          <div class="sw" role="listitem"><i style="background:#d9c8a4"></i><span data-i18n="cChamp"></span></div>
+          <div class="sw" role="listitem"><i style="background:#edece5"></i><span data-i18n="cCream"></span></div>
+        </div>
+        <hr>
+        <p data-i18n="dressT1"></p>
+        <p class="who" data-i18n="dressT2"></p>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ 6. RSVP ============ -->
+  <section class="band dk" id="rsvp">
+    <div class="wrap">
+      <header class="sh"><h2 data-i18n="rsvpH"></h2><div class="orn"><i></i><svg><use href="#star"/></svg><i></i></div></header>
+      <form class="rsvp-card" id="rsvpForm" novalidate>
+        <p class="replied" id="replied" hidden></p>
+        <div class="field">
+          <label for="rName" data-i18n="yourName"></label>
+          <input id="rName" type="text" autocomplete="name" maxlength="40">
+        </div>
+        <fieldset class="field">
+          <legend class="lbl" style="margin-bottom:.5rem" data-i18n="canMake"></legend>
+          <div class="seg">
+            <div><input type="radio" name="att" id="attY" value="yes" checked><label for="attY" data-i18n="yes"></label></div>
+            <div><input type="radio" name="att" id="attN" value="no"><label for="attN" data-i18n="no"></label></div>
+          </div>
+        </fieldset>
+        <div class="pair" id="counts">
+          <div class="field">
+            <span class="lbl" id="lblA" data-i18n="adults"></span>
+            <div class="step"><button type="button" data-t="a" data-d="-1" aria-label="-">&minus;</button><output id="oA" aria-labelledby="lblA">1</output><button type="button" data-t="a" data-d="1" aria-label="+">+</button></div>
+          </div>
+          <div class="field">
+            <span class="lbl" id="lblK" data-i18n="kids"></span>
+            <div class="step"><button type="button" data-t="k" data-d="-1" aria-label="-">&minus;</button><output id="oK" aria-labelledby="lblK">0</output><button type="button" data-t="k" data-d="1" aria-label="+">+</button></div>
+          </div>
+        </div>
+        <div class="field">
+          <label for="rNote" data-i18n="note"></label>
+          <textarea id="rNote" maxlength="240"></textarea>
+        </div>
+        <p class="err" id="rErr" role="alert"></p>
+        <button class="btn solid" type="submit" style="width:100%" data-i18n="confirm"></button>
+      </form>
+    </div>
+  </section>
+
+  <!-- ============ Guest book ============ -->
+  <section class="band lb alt" id="guestbook">
+    <div class="wrap">
+      <header class="sh"><h2 data-i18n="gbH"></h2><div class="orn"><i></i><svg><use href="#star"/></svg><i></i></div></header>
+      <div class="gb">
+        <form id="gbForm" novalidate>
+          <div class="field"><label for="gName" data-i18n="yourName"></label><input id="gName" type="text" maxlength="40" autocomplete="name"></div>
+          <div class="chips">
+            <button class="chip" type="button" data-s="b" data-i18n="chipB"></button>
+            <button class="chip" type="button" data-s="a" data-i18n="chipA"></button>
+            <button class="chip" type="button" data-s="m" data-i18n="chipM"></button>
+          </div>
+          <div class="field"><label for="gMsg" data-i18n="yourMsg"></label><textarea id="gMsg" maxlength="280"></textarea></div>
+          <p class="err" id="gErr" role="alert"></p>
+          <button class="btn solid" type="submit" data-i18n="leaveWish"></button>
+          <p class="small-note" data-i18n="gbNote"></p>
+        </form>
+        <div>
+          <p class="eyebrow" style="margin-bottom:1rem" data-i18n="yourWishes"></p>
+          <ul class="wishes" id="wishes"></ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ Closing ============ -->
+  <section class="band dk closing">
+    <div class="wrap">
+      <h2 data-i18n="closeH"></h2>
+      <p data-i18n="closeP1"></p>
+      <p data-i18n="closeP2"></p>
+      <p class="thanks" data-i18n="closeThanks"></p>
+    </div>
+  </section>
+</main>
+
+<footer data-i18n="footer"></footer>
+
+<div class="modal" id="modal" role="dialog" aria-modal="true" aria-labelledby="mTitle" hidden>
+  <div class="modal-card">
+    <svg class="heart" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21C5 15.500 2 12 2 8.500 2 5.900 4 4 6.500 4c1.700 0 3.400 1 5.500 3 2.100-2 3.800-3 5.500-3C20 4 22 5.900 22 8.500 22 12 19 15.500 12 21z"/></svg>
+    <h3 id="mTitle"></h3>
+    <p id="mText"></p>
+    <div class="msgbox" id="mMsg"></div>
+    <a class="btn solid" id="mWa" href="#" target="_blank" rel="noopener" hidden data-i18n="sendWa"></a>
+    <button class="btn" id="mCopy" type="button" hidden data-i18n="copyMsg"></button>
+    <button class="btn" id="mClose" type="button" data-i18n="close"></button>
+  </div>
+</div>
+<div class="toast" id="toast" role="status"></div>
+
+<script>
+(function () {
+  /* ====== EDIT THESE ======
+     names:     ["Bride name", "Groom name"]
+     eventDate: ceremony start as ISO, e.g. "2026-12-20T16:00:00+05:30"
+     dateLabel: "Saturday, 20 December 2026"
+     welcomeImage / couplePhoto: imgur image ids (the part after imgur.com/)
+     whatsapp:  number with country code, digits only, e.g. "94771234567"
+     heroPhoto: path or data URL for the welcome screen photo
+     photos:    [{src:"photos/1.jpg", alt:"Our first trip"}, ...] */
+  var CONFIG = {
+    names: ["Umesh", "Nawodhya"],
+    eventDate: "2026-12-04T16:00:00+05:30",
+    dateLabel: "Friday, 4 December 2026",
+    whatsapp: "",
+    heroPhoto: "",
+    photos: [
+      { src: "https://i.imgur.com/lTYbuOc.jpg", alt: "Memory lane photo 1" },
+      { src: "https://i.imgur.com/8nOAFJa.jpg", alt: "Memory lane photo 2" },
+      { src: "https://i.imgur.com/bo5l7Fc.jpg", alt: "Memory lane photo 3" },
+      { src: "https://i.imgur.com/pW6t615.jpg", alt: "Memory lane photo 4" },
+      { src: "https://i.imgur.com/ObgWA61.jpg", alt: "Memory lane photo 5" },
+      { src: "https://i.imgur.com/cUDuCav.jpg", alt: "Memory lane photo 6" }
+    ],
+    welcomeImage: "87fR0Px",
+    couplePhoto: "oN887j0"
+  };
+
+  var I18N = {
+    en: {
+      invited: "You're invited", welcome: "Welcome", welcomeGuest: "Welcome, Our Dear Guest",
+      welcomeSub: "We're getting married and we'd love for you to be there", open: "Open the invitation", yourName: "Your name",
+      weddingInv: "Wedding Invitation", weAre: "We're getting <em>married</em>",
+      inviteLine: "With joyful hearts, we invite you and your family to join us as we begin our forever as husband and wife.",
+      dateTime: "Date & Time", venue: "Venue", venueName: "St. Francis of Assisi Church, Mount Lavinia",
+      soon: "Date to be announced", at: "4.00 PM", maps: "Google Maps", calendar: "Save to Calendar", share: "Share on WhatsApp",
+      listenH: "Listen to Our Invitation", listenSub: "Press play to hear a personal message", listenQuote: "“We have a personal message just for you...”",
+      countH: "Counting down to <em>forever</em>...", days: "Days", hours: "Hours", mins: "Minutes", secs: "Seconds",
+      countSoon: "The date will be shared soon.", countGo: "until we say “I do”.", countToday: "Today is the day. Welcome!", countDone: "We are married. Thank you for celebrating with us.",
+      storyH: "Our <em>Story</em>",
+      storyText: "Eight years ago, our eyes met, and in that moment, our hearts found each other. What began as our first love blossomed into a beautiful journey filled with laughter, tears, dreams, successes, and challenges. Through every season of life, we stood by each other, growing stronger with every step. <em>We are happy to begin our forever as husband and wife.</em>",
+      progH: "The <em>Ceremony</em> Programme",
+      e1: "Church Ceremony", d1: "St. Francis of Assisi Church", e2: "Cake Cutting", d2: "", e3: "High Tea & Fellowship", d3: "In the church garden", e4: "Photo Session", d4: "",
+      nowTag: "Happening now", nextTag: "Up next", tlNote: "The highlighted moment follows the clock on the day.", tlDone: "The celebration is complete. Thank you for being with us.",
+      postK: "Post Ceremony", postH: "Evening High Tea", postT: "We're having our post-ceremony celebration evening high tea at the church garden.",
+      memH: "Memory <em>Lane</em>", galNote: "These frames are waiting for your photos.", photo: "Photo", wish: "Wish", love: "Love",
+      dressH: "Dress <em>Code</em>", themeCol: "Theme Colours",
+      cForest: "Forest", cMoss: "Moss", cSage: "Sage", cChamp: "Champagne", cCream: "Cream",
+      dressT1: "No need to dress fancy! Please come in comfortable attire.", dressT2: "Dresses and sarees for the ladies, and suits or smart formal wear for the gentlemen.",
+      rsvpH: "Will you <em>join us</em>?", canMake: "Can you make it?", yes: "Joyfully accept", no: "Regretfully decline",
+      adults: "Adults", kids: "Kids", note: "A note for us (optional)", confirm: "Confirm",
+      sending: "Sending...", sendFail: "We could not send your reply. Please check your internet connection and try again.", needName: "Please add your name so we know who is replying.",
+      repYes: "You replied: coming with {a}. You can update it below.", repNo: "You replied: unable to attend. You can update it below.",
+      adult1: "1 adult", adultN: "{n} adults", kid1: "1 kid", kidN: "{n} kids", and: " and ",
+      thanksT: "Thank you!", thanksP: "We can't wait to see you!", missT: "We'll miss you", missP: "Thank you for letting us know. You'll be in our hearts.",
+      sendWa: "Send confirmation on WhatsApp", copyMsg: "Copy message", close: "Close", copied: "Message copied. Paste it to us on WhatsApp.", selectIt: "Select the message above and copy it.",
+      rsvpYesMsg: "RSVP{for}: {name} is coming. Adults: {a}, Kids: {k}.{note}", rsvpNoMsg: "RSVP{for}: {name} is unable to attend.{note}", noteWord: " Note: ",
+      gbH: "Leave Us <em>a Wish</em>", chipB: "A blessing", chipA: "Advice", chipM: "A memory", yourMsg: "Your message", leaveWish: "Leave a wish",
+      gbNote: "Wishes you leave are kept on this device. Use the send button after posting to deliver yours to the couple.",
+      yourWishes: "Your wishes", gbEmpty: "Your wish will appear here.", gbNeed: "Please add your name and a short message.", saved: "Your wish is saved",
+      sendWish: "Send this wish on WhatsApp", copyWish: "Copy this wish to send us", wishCopied: "Wish copied. Paste it to us on WhatsApp.",
+      starters: { b: "Wishing you a lifetime of ", a: "My advice for married life: ", m: "I still remember when " }, aboutPhoto: "About photo {n}: ", loved: "You loved this one",
+      closeH: "Your presence is truly the best gift we could ask for.",
+      closeP1: "Your presence, love, and blessings are the greatest gifts we could ask for as we begin this new chapter together.",
+      closeP2: "For those who wish to share their love in a special way, a contribution to our future would mean so much.",
+      closeThanks: "Thank you for being part of this milestone with us.", footer: "With love and blessings",
+      shareText: "You are invited to our wedding", calTitle: "Our Wedding", calNeed: "The date will be added soon.",
+      voiceNoSupport: "Voice is not supported in this browser.", voiceFail: "The voice message could not be played.",
+      musicFail: "Background music could not be played. Please check your internet connection and try again.",
+      speakEn: "Hello {name}. We warmly invite you and your family to our wedding. Your presence is the greatest gift we could ask for. We can't wait to celebrate with you."
+    }
+  };
+
+  var $ = function (s) { return document.querySelector(s); };
+  var $$ = function (s) { return Array.prototype.slice.call(document.querySelectorAll(s)); };
+  function lsGet(k, d) { try { var v = localStorage.getItem("forever:" + k); return v == null ? d : JSON.parse(v); } catch (e) { return d; } }
+  function lsSet(k, v) { try { localStorage.setItem("forever:" + k, JSON.stringify(v)); } catch (e) {} }
+  function esc(s) { return String(s).replace(/[&<>"']/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]; }); }
+  function pad(n) { return String(n).padStart(2, "0"); }
+
+  var lang = "en";
+  function t(k, vars) {
+    var s = (I18N[lang][k] != null ? I18N[lang][k] : I18N.en[k]);
+    if (typeof s !== "string") return s;
+    if (vars) Object.keys(vars).forEach(function (v) { s = s.split("{" + v + "}").join(vars[v]); });
+    return s;
+  }
+  var toastT;
+  function toast(msg) { var el = $("#toast"); el.textContent = msg; el.classList.add("show"); clearTimeout(toastT); toastT = setTimeout(function () { el.classList.remove("show"); }, 2800); }
+
+  var hasNames = !!(CONFIG.names[0] && CONFIG.names[1]);
+  var coupleText = hasNames ? CONFIG.names[0] + " & " + CONFIG.names[1] : "";
+
+  /* ---------- Guest name ---------- */
+  function nameFromHash() {
+    var h = ""; try { h = decodeURIComponent(location.hash.replace(/^#/, "")); } catch (e) {}
+    h = h.replace(/[-_.~]+/g, " ").trim();
+    return h.replace(/\b\w/g, function (c) { return c.toUpperCase(); }).slice(0, 40);
+  }
+  var guest = nameFromHash() || lsGet("guest", "");
+  function paintWelcome() {
+    $("#wTitle").innerHTML = guest ? esc(t("welcome")) + ",<br><em>" + esc(guest) + "</em>" : esc(t("welcomeGuest"));
+  }
+  function setGuest(n) {
+    guest = (n || "").trim(); lsSet("guest", guest); paintWelcome();
+    ["#rName", "#gName"].forEach(function (s) { var el = $(s); if (!el.value || el.dataset.auto === "1") { el.value = guest; el.dataset.auto = "1"; } });
+  }
+  ["#rName", "#gName"].forEach(function (s) { $(s).addEventListener("input", function () { this.dataset.auto = "0"; }); });
+  window.addEventListener("hashchange", function () { var n = nameFromHash(); if (n) setGuest(n); });
+
+  /* ---------- Card, calendar, share ---------- */
+  function paintCard() {
+    $("#cardNames").innerHTML = hasNames ? esc(CONFIG.names[0]) + " <em>&amp;</em> " + esc(CONFIG.names[1]) : t("weAre");
+    var dl = CONFIG.dateLabel;
+    $("#cardDate").innerHTML = dl ? esc(dl) + " &middot; " + esc(t("at")) : '<span class="soon">' + esc(t("soon")) + "</span> &middot; " + esc(t("at"));
+  }
+  var startMs = CONFIG.eventDate ? new Date(CONFIG.eventDate).getTime() : NaN;
+  (function () {
+    var cal = $("#calBtn");
+    if (!isNaN(startMs)) {
+      function f(ms) { return new Date(ms).toISOString().replace(/[-:]|\.\d{3}/g, ""); }
+      cal.href = "https://calendar.google.com/calendar/render?action=TEMPLATE&text=" + encodeURIComponent((coupleText ? coupleText + " - " : "") + "Wedding") +
+        "&dates=" + f(startMs) + "/" + f(startMs + 3 * 3600000) + "&location=" + encodeURIComponent("St. Francis of Assisi Church, Mount Lavinia");
+    } else {
+      cal.setAttribute("aria-disabled", "true");
+      cal.addEventListener("click", function (e) { e.preventDefault(); toast(t("calNeed")); });
+    }
+  })();
+
+  /* ---------- Music ---------- */
+  var music = $("#backgroundMusic"), musicBtn = $("#musicBtn"), vol = $("#musicVol"), speaking = false;
+  var savedVol = lsGet("vol", 0.6);
+  if (typeof savedVol !== "number" || savedVol < 0 || savedVol > 1) savedVol = 0.6;
+  music.volume = savedVol; vol.value = Math.round(savedVol * 100);
+  function paintMusic() {
+    var audible = !music.paused && !music.muted && music.volume > 0;
+    musicBtn.setAttribute("aria-pressed", audible ? "true" : "false");
+    musicBtn.setAttribute("aria-label", audible ? "Mute music" : (music.paused ? "Turn music on" : "Unmute music"));
+    var shown = music.muted ? 0 : Math.round(music.volume * 100);
+    vol.value = shown; vol.style.setProperty("--p", shown + "%");
+  }
+  function startMusic() {
+    music.play().then(paintMusic).catch(function () {
+      paintMusic();
+      toast(t("musicFail"));
+    });
+  }
+  ["pause", "play", "volumechange"].forEach(function (ev) { music.addEventListener(ev, paintMusic); });
+  music.addEventListener("error", function () {
+    paintMusic();
+    toast(t("musicFail"));
+  });
+  musicBtn.addEventListener("click", function () {
+    if (music.paused) { music.muted = false; if (music.volume === 0) music.volume = 0.5; startMusic(); return; }
+    if (music.muted || music.volume === 0) { music.muted = false; if (music.volume === 0) music.volume = 0.5; }
+    else music.muted = true;
+    paintMusic();
+  });
+  vol.addEventListener("input", function () {
+    var v = (+vol.value) / 100;
+    music.volume = v; music.muted = false; lsSet("vol", v); paintMusic();
+  });
+  paintMusic();
+
+  /* ---------- Images from imgur (tries the common file types) ---------- */
+  function loadImgur(img, id, onFail) {
+    var exts = [".jpg", ".png", ".jpeg", ""], i = 0;
+    img.onerror = function () { i++; if (i < exts.length) img.src = "https://i.imgur.com/" + id + exts[i]; else if (onFail) onFail(); };
+    img.src = "https://i.imgur.com/" + id + exts[0];
+  }
+  loadImgur($("#welcomeBg"), CONFIG.welcomeImage, function () { $("#welcomeBg").hidden = true; });
+  loadImgur($("#couplePhoto"), CONFIG.couplePhoto, function () { $("#couple").hidden = true; });
+
+  /* ---------- Welcome open ---------- */
+  var welcome = $("#welcome");
+  document.body.style.overflow = "hidden";
+  $("#page").setAttribute("aria-hidden", "true");
+  $("#openBtn").addEventListener("click", function () {
+    startMusic();
+    welcome.classList.add("gone"); document.body.style.overflow = ""; $("#page").removeAttribute("aria-hidden");
+    setTimeout(function () { welcome.hidden = true; }, 1000); window.scrollTo(0, 0);
+  });
+
+  /* ---------- Countdown ---------- */
+  function tick() {
+    if (isNaN(startMs)) { $("#countNote").textContent = t("countSoon"); return; }
+    var diff = startMs - Date.now();
+    if (diff <= 0) {
+      ["d", "h", "m", "s"].forEach(function (u) { $('[data-u="' + u + '"]').textContent = "00"; });
+      $("#countNote").textContent = diff > -6 * 3600000 ? t("countToday") : t("countDone"); return;
+    }
+    var s = Math.floor(diff / 1000);
+    $('[data-u="d"]').textContent = Math.floor(s / 86400); $('[data-u="h"]').textContent = pad(Math.floor(s % 86400 / 3600));
+    $('[data-u="m"]').textContent = pad(Math.floor(s % 3600 / 60)); $('[data-u="s"]').textContent = pad(s % 60);
+    $("#countNote").textContent = t("countGo");
+  }
+  setInterval(tick, 1000);
+
+  /* ---------- Programme with live highlight ---------- */
+  var EV = [{ h: 16, m: 0, tm: "04.00 PM" }, { h: 17, m: 45, tm: "05.45 PM" }, { h: 17, m: 50, tm: "05.50 PM" }, { h: 18, m: 30, tm: "06.30 PM" }];
+  function dayPart() { var m = /^(\d{4}-\d{2}-\d{2})/.exec(CONFIG.eventDate || ""); return m && m[1]; }
+  function paintTL() {
+    var dp = dayPart(), now = Date.now(), cur = -2, over = false;
+    var times = dp ? EV.map(function (e) { return new Date(dp + "T" + pad(e.h) + ":" + pad(e.m) + ":00+05:30").getTime(); }) : null;
+    if (times) { cur = -1; times.forEach(function (x, i) { if (now >= x) cur = i; }); over = now >= times[times.length - 1] + 45 * 60000; }
+    $("#tl").innerHTML = EV.map(function (e, i) {
+      var cls = "", tag = "";
+      if (times) {
+        if (over || i < cur) cls = "done"; else if (i === cur) { cls = "now"; tag = t("nowTag"); } else if (i === cur + 1) { cls = "next"; tag = t("nextTag"); }
+      }
+      var d = t("d" + (i + 1));
+      return '<li class="' + cls + '"><div class="box"><div class="t">' + esc(e.tm) + '</div><div class="e">' + esc(t("e" + (i + 1))) + '</div>' + (d ? '<div class="d">' + esc(d) + '</div>' : "") + (tag ? '<span class="tag">' + esc(tag) + "</span>" : "") + "</div></li>";
+    }).join("");
+    $("#tlNote").textContent = over ? t("tlDone") : t("tlNote");
+  }
+  setInterval(function () { if (dayPart()) paintTL(); }, 30000);
+
+  /* ---------- Gallery ---------- */
+  var likes = lsGet("likes", {});
+  var photoList = CONFIG.photos.length ? CONFIG.photos : [1, 2, 3, 4, 5, 6].map(function (n) { return { src: "", alt: "" }; });
+  var ICON_IMG = '<svg viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="9" cy="10" r="1.500"/><path d="M21 16l-5-5-9 9"/></svg>';
+  function paintGallery() {
+    $("#gal").innerHTML = photoList.map(function (p, i) {
+      var pic = p.src ? '<div class="pic"><img loading="lazy" src="' + esc(p.src) + '" alt="' + esc(p.alt || "") + '"></div>' : '<div class="pic empty">' + ICON_IMG + "<span>" + esc(t("photo")) + " " + (i + 1) + "</span></div>";
+      return '<figure class="shot">' + pic + '<div class="acts"><button class="ico like" type="button" data-i="' + i + '" aria-pressed="' + (likes[i] ? "true" : "false") + '"><svg viewBox="0 0 24 24"><path d="M12 21C5 15.500 2 12 2 8.500 2 5.900 4 4 6.500 4c1.700 0 3.400 1 5.500 3 2.100-2 3.800-3 5.500-3C20 4 22 5.900 22 8.500 22 12 19 15.500 12 21z"/></svg>' + esc(t("love")) + '</button><button class="ico wish" type="button" data-i="' + i + '"><svg viewBox="0 0 24 24"><path d="M4 5h16v11H9l-5 4V5z"/></svg>' + esc(t("wish")) + "</button></div></figure>";
+    }).join("");
+    $("#galNote").textContent = CONFIG.photos.length ? "" : t("galNote");
+  }
+  $("#gal").addEventListener("click", function (e) {
+    var b = e.target.closest("button"); if (!b) return; var i = b.dataset.i;
+    if (b.classList.contains("like")) {
+      var on = b.getAttribute("aria-pressed") !== "true"; b.setAttribute("aria-pressed", on ? "true" : "false"); likes[i] = on; lsSet("likes", likes); if (on) toast(t("loved"));
+    } else {
+      var m = $("#gMsg"); m.value = t("aboutPhoto", { n: +i + 1 }); $("#guestbook").scrollIntoView({ behavior: "smooth" }); setTimeout(function () { m.focus(); }, 600);
+    }
+  });
+
+  /* ---------- RSVP ---------- */
+  var cnt = { a: 1, k: 0 };
+  $("#counts").addEventListener("click", function (e) {
+    var b = e.target.closest("button"); if (!b) return; var k = b.dataset.t;
+    cnt[k] = Math.max(k === "a" ? 1 : 0, Math.min(10, cnt[k] + (+b.dataset.d))); $("#oA").textContent = cnt.a; $("#oK").textContent = cnt.k;
+  });
+  function attVal() { return $('input[name="att"]:checked').value; }
+  $$('input[name="att"]').forEach(function (r) { r.addEventListener("change", function () { $("#counts").hidden = attVal() === "no"; }); });
+  function waLink(msg) { return CONFIG.whatsapp ? "https://wa.me/" + CONFIG.whatsapp.replace(/\D/g, "") + "?text=" + encodeURIComponent(msg) : ""; }
+  function plural(n, one, many) { return n === 1 ? t(one) : t(many, { n: n }); }
+  function showReplied() {
+    var r = lsGet("rsvp", null), el = $("#replied");
+    if (!r) { el.hidden = true; return; }
+    el.hidden = false;
+    var who = plural(r.a, "adult1", "adultN") + (r.k ? t("and") + plural(r.k, "kid1", "kidN") : "");
+    el.textContent = r.att === "yes" ? t("repYes", { a: who }) : t("repNo");
+  }
+  function openModal(r, msg) {
+    var yes = r.att === "yes";
+    $("#mTitle").textContent = t(yes ? "thanksT" : "missT"); $("#mText").textContent = t(yes ? "thanksP" : "missP"); $("#mMsg").textContent = msg;
+    var wa = waLink(msg); $("#mWa").hidden = !wa; if (wa) $("#mWa").href = wa;
+    $("#mCopy").hidden = true; $("#modal").hidden = false; $("#mClose").focus();
+  }
+  var FORM_URL = "https://formspree.io/f/xppqrkqv";
+  $("#rsvpForm").addEventListener("submit", function (e) {
+    e.preventDefault();
+    var name = $("#rName").value.trim();
+    if (!name) { $("#rErr").textContent = t("needName"); $("#rName").focus(); return; }
+    $("#rErr").textContent = "";
+    var yes = attVal() === "yes";
+    var r = { name: name, att: attVal(), a: cnt.a, k: cnt.k, note: $("#rNote").value.trim() };
+    var vars = { "for": coupleText ? " - " + coupleText : "", name: r.name, a: r.a, k: r.k, note: r.note ? t("noteWord") + r.note : "" };
+    var msg = t(yes ? "rsvpYesMsg" : "rsvpNoMsg", vars);
+    var btn = $("#rsvpForm button[type=\"submit\"]");
+    btn.disabled = true; btn.textContent = t("sending");
+    fetch(FORM_URL, {
+      method: "POST",
+      headers: { "Accept": "application/json", "Content-Type": "application/json" },
+      body: JSON.stringify({
+        _subject: "RSVP: " + name + (yes ? " is coming" : " cannot attend") + (coupleText ? " (" + coupleText + ")" : ""),
+        name: name, attending: yes ? "Yes" : "No", adults: yes ? r.a : 0, kids: yes ? r.k : 0,
+        note: r.note, message: msg
+      })
+    }).then(function (res) {
+      if (!res.ok) throw new Error("status " + res.status);
+      lsSet("rsvp", r); showReplied(); openModal(r, msg);
+    }).catch(function () {
+      $("#rErr").textContent = t("sendFail");
+    }).then(function () {
+      btn.disabled = false; btn.textContent = t("confirm");
+    });
+  });
+  function copyText(txt, ok) {
+    function fallback() {
+      var ta = document.createElement("textarea"); ta.value = txt; ta.style.position = "fixed"; ta.style.opacity = "0"; document.body.appendChild(ta); ta.select();
+      var done = false; try { done = document.execCommand("copy"); } catch (e) {} document.body.removeChild(ta); toast(done ? ok : t("selectIt"));
+    }
+    if (navigator.clipboard && navigator.clipboard.writeText) navigator.clipboard.writeText(txt).then(function () { toast(ok); }, fallback); else fallback();
+  }
+  $("#mClose").addEventListener("click", function () { $("#modal").hidden = true; });
+  $("#modal").addEventListener("click", function (e) { if (e.target === this) this.hidden = true; });
+  document.addEventListener("keydown", function (e) { if (e.key === "Escape" && !$("#modal").hidden) $("#modal").hidden = true; });
+
+  /* ---------- Guest book ---------- */
+  var wishes = lsGet("wishes", []);
+  function renderWishes() {
+    var ul = $("#wishes");
+    if (!wishes.length) { ul.innerHTML = '<li class="empty">' + esc(t("gbEmpty")) + "</li>"; return; }
+    ul.innerHTML = wishes.slice().reverse().map(function (w) { return "<li><q>" + esc(w.m) + "</q><cite>" + esc(w.n) + "</cite></li>"; }).join("");
+  }
+  $$(".chip").forEach(function (c) { c.addEventListener("click", function () { var m = $("#gMsg"); m.value = t("starters")[c.dataset.s]; m.focus(); m.setSelectionRange(m.value.length, m.value.length); }); });
+  $("#gbForm").addEventListener("submit", function (e) {
+    e.preventDefault();
+    var n = $("#gName").value.trim(), m = $("#gMsg").value.trim();
+    if (!n || !m) { $("#gErr").textContent = t("gbNeed"); return; }
+    $("#gErr").textContent = ""; wishes.push({ n: n, m: m }); lsSet("wishes", wishes); renderWishes(); $("#gMsg").value = "";
+    var msg = "Wish" + (coupleText ? " - " + coupleText : "") + " / " + n + ": " + m, wa = waLink(msg), first = $("#wishes").querySelector("li");
+    var act = document.createElement(wa ? "a" : "button"); act.className = "btn"; act.style.marginTop = "0.8rem"; act.textContent = t(wa ? "sendWish" : "copyWish");
+    if (wa) { act.href = wa; act.target = "_blank"; act.rel = "noopener"; } else { act.type = "button"; act.addEventListener("click", function () { copyText(msg, t("wishCopied")); }); }
+    first.appendChild(act); toast(t("saved"));
+  });
+
+  /* ---------- Apply language ---------- */
+  function applyLang() {
+    document.documentElement.lang = lang;
+    $$("[data-i18n]").forEach(function (el) { el.innerHTML = t(el.dataset.i18n); });
+    if (hasNames) $(".w-sub").textContent = CONFIG.names[0] + " & " + CONFIG.names[1] + " are getting married and we'd love for you to be there";
+    paintWelcome(); paintCard(); paintTL(); paintGallery(); renderWishes(); showReplied(); tick();
+  }
+  setGuest(guest);
+  applyLang();
+})();
+</script>
+</body>
+</html>
